@@ -1,6 +1,7 @@
 import {
     ProductInputSchema,
     CartSchema,
+    OrderInputSchema,
     OrderItemSchema,
     UserInputSchema,
     UserSignInSchema,
@@ -23,6 +24,7 @@ export type Data = {
         isPublished: boolean
     }[]
 }
+export type IOrderInput = z.infer<typeof OrderInputSchema>
 export type IProductInput = z.infer<typeof ProductInputSchema>
 export type OrderItem = z.infer<typeof OrderItemSchema>
 export type Cart = z.infer<typeof CartSchema>
