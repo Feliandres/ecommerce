@@ -88,10 +88,9 @@ export default async function OrdersPage(props: {
                         ))}
                     </TableBody>
                 </Table>
-                    {orders.totalPages > 1 && (
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-                    <Pagination page={page} totalPages={orders?.totalPages!} />
-                    )}
+                {orders.totalPages > 1 && (
+                    <Pagination page={page} totalPages={orders.totalPages} />
+                )}
             </div>
             <BrowsingHistoryList className='mt-16' />
         </div>
