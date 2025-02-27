@@ -12,18 +12,6 @@ import {
 } from "@/lib/validator";
 import { z } from "zod";
 
-// review
-
-export type IReviewInput = z.infer<typeof ReviewInputSchema>
-export type IReviewDetails = IReviewInput & {
-    _id: string
-    createdAt: string
-    user: {
-        name: string
-    }
-}
-// product
-export type IProductInput = z.infer<typeof ProductInputSchema>
 export type Data = {
     users: IUserInput[]
     products: IProductInput[]
@@ -44,10 +32,31 @@ export type Data = {
         isPublished: boolean
     }[]
 }
+// review
+export type IReviewInput = z.infer<typeof ReviewInputSchema>
+export type IReviewDetails = IReviewInput & {
+    _id: string
+    createdAt: string
+    user: {
+        name: string
+    }
+}
+
+// product
+export type IProductInput = z.infer<typeof ProductInputSchema>
 export type IOrderInput = z.infer<typeof OrderInputSchema>
+export type IOrderList = IOrderInput & {
+    _id: string
+    user: {
+        name: string
+        email: string
+    }
+    createdAt: Date
+}
 export type OrderItem = z.infer<typeof OrderItemSchema>
 export type Cart = z.infer<typeof CartSchema>
 export type ShippingAddress = z.infer<typeof ShippingAddressSchema>
+
 // user
 export type IUserInput = z.infer<typeof UserInputSchema>
 export type IUserSignIn = z.infer<typeof UserSignInSchema>
