@@ -94,6 +94,9 @@ body {
     .flex-between {
       @apply flex justify-between items-center;
     }
+    .web-page-content p {
+      @apply py-2;
+    }
 }
 
 
