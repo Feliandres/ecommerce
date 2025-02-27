@@ -17,9 +17,12 @@ import { IOrder } from '@/lib/db/models/order.model'
 import { cn, formatDateTime } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import ProductPrice from '../product/product-price'
+import ActionButton from '../action-button'
+import { deliverOrder, updateOrderToPaid } from '@/lib/actions/order.actions'
 
 export default function OrderDetailsForm({
     order,
+    isAdmin,
 }: {
     order: IOrder
     isAdmin: boolean
@@ -55,18 +58,18 @@ export default function OrderDetailsForm({
                         </p>
 
                         {isDelivered ? (
-                        <Badge>
-                            Delivered at {formatDateTime(deliveredAt!).dateTime}
-                        </Badge>
-                        ) : (
-                        <div>
-                            {' '}
-                            <Badge variant='destructive'>Not delivered</Badge>
+                            <Badge>
+                                Delivered at {formatDateTime(deliveredAt!).dateTime}
+                            </Badge>
+                            ) : (
                             <div>
-                            Expected delivery at{' '}
-                            {formatDateTime(expectedDeliveryDate!).dateTime}
+                                {' '}
+                                <Badge variant='destructive'>Not delivered</Badge>
+                                <div>
+                                Expected delivery at{' '}
+                                {formatDateTime(expectedDeliveryDate!).dateTime}
+                                </div>
                             </div>
-                        </div>
                         )}
                     </CardContent>
                 </Card>
@@ -75,9 +78,9 @@ export default function OrderDetailsForm({
                         <h2 className='text-xl pb-4'>Payment Method</h2>
                         <p>{paymentMethod}</p>
                         {isPaid ? (
-                        <Badge>Paid at {formatDateTime(paidAt!).dateTime}</Badge>
-                        ) : (
-                        <Badge variant='destructive'>Not paid</Badge>
+                            <Badge>Paid at {formatDateTime(paidAt!).dateTime}</Badge>
+                            ) : (
+                            <Badge variant='destructive'>Not paid</Badge>
                         )}
                     </CardContent>
                 </Card>
@@ -101,10 +104,10 @@ export default function OrderDetailsForm({
                                             className='flex items-center'
                                         >
                                             <Image
-                                            src={item.image}
-                                            alt={item.name}
-                                            width={50}
-                                            height={50}
+                                                src={item.image}
+                                                alt={item.name}
+                                                width={50}
+                                                height={50}
                                             ></Image>
                                             <span className='px-2'>{item.name}</span>
                                         </Link>
@@ -125,11 +128,11 @@ export default function OrderDetailsForm({
                     <CardContent className='p-4  space-y-4 gap-4'>
                         <h2 className='text-xl pb-4'>Order Summary</h2>
                         <div className='flex justify-between'>
-                        <div>Items</div>
-                        <div>
-                            {' '}
-                            <ProductPrice price={itemsPrice} plain />
-                        </div>
+                            <div>Items</div>
+                            <div>
+                                {' '}
+                                <ProductPrice price={itemsPrice} plain />
+                            </div>
                         </div>
                         <div className='flex justify-between'>
                             <div>Tax</div>
@@ -154,12 +157,26 @@ export default function OrderDetailsForm({
                         </div>
 
                         {!isPaid && ['Stripe', 'PayPal'].includes(paymentMethod) && (
-                        <Link
-                            className={cn(buttonVariants(), 'w-full')}
-                            href={`/checkout/${order._id}`}
-                        >
-                            Pay Order
-                        </Link>
+                            <Link
+                                className={cn(buttonVariants(), 'w-full')}
+                                href={`/checkout/${order._id}`}
+                            >
+                                Pay Order
+                            </Link>
+                        )}
+
+                        {isAdmin && !isPaid && paymentMethod === 'Cash On Delivery' && (
+                            <ActionButton
+                                caption='Mark as paid'
+                                action={() => updateOrderToPaid(order._id)}
+                            />
+                        )}
+
+                        {isAdmin && isPaid && !isDelivered && (
+                            <ActionButton
+                                caption='Mark as delivered'
+                                action={() => deliverOrder(order._id)}
+                            />
                         )}
                     </CardContent>
                 </Card>
