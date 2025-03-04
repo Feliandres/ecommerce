@@ -7,7 +7,7 @@ import { connectToDatabase } from '../db'
 import User, { IUser } from '../db/models/user.model'
 import { formatError } from '../utils'
 import { redirect } from 'next/navigation'
-import { PAGE_SIZE } from '../constants'
+import { getSetting } from './setting.actions'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
@@ -85,7 +85,10 @@ export async function getAllUsers({
     limit?: number
     page: number
 }) {
-    limit = limit || PAGE_SIZE
+    const {
+        common: { pageSize },
+    } = await getSetting()
+    limit = limit || pageSize
     await connectToDatabase()
 
     const skipAmount = (Number(page) - 1) * limit

@@ -1,40 +1,42 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import data from '@/lib/data'
 import { connectToDatabase } from '.'
+import User from './models/user.model'
 import Product from './models/product.model'
+import Review from './models/review.model'
 import { cwd } from 'process'
 import { loadEnvConfig } from '@next/env'
-import User from './models/user.model'
-import Review from './models/review.model'
-// import Order from './models/order.model'
-// import {
-//     IOrderInput,
-//     OrderItem,
-//     ShippingAddress
-// } from '@/types'
-// import {
-//     round2,
-//     calculatePastDate,
-//     calculateFutureDate,
-//     generateId,
-// } from '../utils'
+import Order from './models/order.model'
+import {
+    calculateFutureDate,
+    calculatePastDate,
+    generateId,
+    round2,
+} from '../utils'
 import WebPage from './models/web-page.model'
+import Setting from './models/setting.model'
+import { OrderItem, IOrderInput, ShippingAddress } from '@/types'
 
 loadEnvConfig(cwd())
 
 const main = async () => {
     try {
-        const { products, users, reviews, webPages } = data
+        const { products, users, reviews, webPages, settings } = data
         await connectToDatabase(process.env.MONGODB_URI)
 
         await User.deleteMany()
         const createdUser = await User.insertMany(users)
 
+        await Setting.deleteMany()
+        const createdSetting = await Setting.insertMany(settings)
+
         await WebPage.deleteMany()
         await WebPage.insertMany(webPages)
 
         await Product.deleteMany()
-        const createdProducts = await Product.insertMany(products)
+        const createdProducts = await Product.insertMany(
+            products.map((x) => ({ ...x, _id: undefined }))
+        )
 
         await Review.deleteMany()
         const rws = []
@@ -58,7 +60,7 @@ const main = async () => {
             }
         }
         const createdReviews = await Review.insertMany(rws)
-        /*
+
         await Order.deleteMany()
         const orders = []
         for (let i = 0; i < 200; i++) {
@@ -71,12 +73,13 @@ const main = async () => {
             )
         }
         const createdOrders = await Order.insertMany(orders)
-        */
+
         console.log({
             createdUser,
             createdProducts,
             createdReviews,
-            //createdOrders,
+            createdOrders,
+            createdSetting,
             message: 'Seeded database successfully',
         })
         process.exit(0)
@@ -86,7 +89,7 @@ const main = async () => {
     }
 }
 
-/*
+
 const generateOrder = async (
     i: number,
     users: any,
@@ -210,6 +213,6 @@ export const calcDeliveryDateAndPriceForSeed = ({
         totalPrice,
     }
 }
-*/
+
 
 main()

@@ -15,6 +15,7 @@ import {
 
 import useColorStore from '@/hooks/use-color-store'
 import useIsMounted from '@/hooks/use-is-mounted'
+import { useTranslations } from 'next-intl'
 
 export default function ThemeSwitcher() {
     const { theme, setTheme } = useTheme()
@@ -23,17 +24,18 @@ export default function ThemeSwitcher() {
         setTheme(value)
     }
     const isMounted = useIsMounted()
+    const t = useTranslations('Header')
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className='header-button h-[41px]'>
                 {theme === 'dark' && isMounted ? (
                     <div className='flex items-center gap-1'>
-                        <Moon className='h-4 w-4' /> Dark <ChevronDownIcon />
+                        <Moon className='h-4 w-4' /> {t('Dark')} <ChevronDownIcon />
                     </div>
                 ) : (
                     <div className='flex items-center gap-1'>
-                        <Sun className='h-4 w-4' /> Light
-                        <ChevronDownIcon />
+                        <Sun className='h-4 w-4' /> {t('Light')} <ChevronDownIcon />
                     </div>
                 )}
             </DropdownMenuTrigger>
@@ -42,14 +44,14 @@ export default function ThemeSwitcher() {
 
                 <DropdownMenuRadioGroup value={theme} onValueChange={changeTheme}>
                     <DropdownMenuRadioItem value='dark'>
-                        <Moon className='h-4 w-4 mr-1' /> Dark
+                        <Moon className='h-4 w-4 mr-1' /> {t('Dark')}
                     </DropdownMenuRadioItem>
                     <DropdownMenuRadioItem value='light'>
-                        <Sun className='h-4 w-4 mr-1' /> Light
+                        <Sun className='h-4 w-4 mr-1' /> {t('Light')}
                     </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
                     <DropdownMenuSeparator />
-                    <DropdownMenuLabel>Color</DropdownMenuLabel>
+                    <DropdownMenuLabel>{t('Color')}</DropdownMenuLabel>
 
                     <DropdownMenuRadioGroup
                         value={color.name}
@@ -62,7 +64,7 @@ export default function ThemeSwitcher() {
                                 className='h-4 w-4 mr-1 rounded-full'
                             ></div>
 
-                            {c.name}
+                            {t(c.name)}
                         </DropdownMenuRadioItem>
                     ))}
                 </DropdownMenuRadioGroup>

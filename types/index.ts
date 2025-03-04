@@ -10,6 +10,12 @@ import {
     ReviewInputSchema,
     UserNameSchema,
     WebPageInputSchema,
+    CarouselSchema,
+    SettingInputSchema,
+    SiteLanguageSchema,
+    SiteCurrencySchema,
+    PaymentMethodSchema,
+    DeliveryDateSchema,
 } from "@/lib/validator";
 import { z } from "zod";
 
@@ -33,6 +39,7 @@ export type Data = {
         buttonCaption: string
         isPublished: boolean
     }[]
+    settings: ISettingInput[]
 }
 // review
 export type IReviewInput = z.infer<typeof ReviewInputSchema>
@@ -67,3 +74,14 @@ export type IUserName = z.infer<typeof UserNameSchema>
 
 // webpage
 export type IWebPageInput = z.infer<typeof WebPageInputSchema>
+
+// setting
+export type ICarousel = z.infer<typeof CarouselSchema>
+export type ISettingInput = z.infer<typeof SettingInputSchema>
+export type ClientSetting = ISettingInput & {
+    currency: string
+}
+export type SiteLanguage = z.infer<typeof SiteLanguageSchema>
+export type SiteCurrency = z.infer<typeof SiteCurrencySchema>
+export type PaymentMethod = z.infer<typeof PaymentMethodSchema>
+export type DeliveryDate = z.infer<typeof DeliveryDateSchema>
